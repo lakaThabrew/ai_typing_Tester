@@ -19,6 +19,8 @@ A full-stack typing speed tester powered by **Gemini AI** with a progressive dif
 - **Profile System** - Track current stage/level with progressive unlocking
 - **Real-time Feedback** - Live WPM, CPM, accuracy, and error tracking
 - **Smart Recommendations** - AI-powered suggestions based on performance
+- **Manual Test Submission** - Submit incomplete or incorrect typing attempts for practice
+- **Profile Management** - Update password, email, and personal information
 
 ### 📊 Statistics & Progress
 
@@ -175,89 +177,6 @@ Backend will run on `http://localhost:5000`
 ```bash
 npm run build
 npm run start:backend
-```
-
-## 📖 API Documentation
-
-### Authentication Endpoints
-
-#### Register User
-
-```http
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "securepassword"
-}
-```
-
-#### Login User
-
-```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "john@example.com",
-  "password": "securepassword"
-}
-```
-
-#### Get User Profile
-
-```http
-GET /api/auth/profile
-Authorization: Bearer <token>
-```
-
-### Test Endpoints
-
-#### Submit Test Result
-
-```http
-POST /api/test/submit
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "wpm": 65,
-  "cpm": 325,
-  "accuracy": 95,
-  "errors": 5,
-  "stage": "steady",
-  "level": 3,
-  "time": 60
-}
-```
-
-#### Get User Stats
-
-```http
-GET /api/test/stats
-Authorization: Bearer <token>
-```
-
-#### Get Leaderboard
-
-```http
-GET /api/test/leaderboard
-```
-
-### AI Endpoints
-
-#### Generate Typing Phrase
-
-```http
-POST /api/ai/generate-pharse
-Content-Type: application/json
-
-{
-  "stage": "easy",
-  "level": 1
-}
 ```
 
 ## 🎮 How to Use
