@@ -13,6 +13,7 @@ import {
 
 import LoginScreen from "./LoginScreen.jsx";
 import MainComponent from "./MainComponent.jsx";
+import Profile from "./Profile.jsx";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -26,6 +27,7 @@ const TypingSpeedTester = () => {
   const [authError, setAuthError] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
 
   // Test State
   const [stage, setStage] = useState("easy");
@@ -121,21 +123,80 @@ const TypingSpeedTester = () => {
     setHistory([]);
     setStage("easy");
     setLevel(1);
+    setShowProfile(false);
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    // Merge updated user data with existing tests/history
+    const mergedUser = {
+      ...updatedUser,
+      tests: history, // Keep the existing history
+    };
+    setUser(mergedUser);
+    localStorage.setItem("user", JSON.stringify(mergedUser));
   };
 
   // Load user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     const savedProfile = localStorage.getItem("userProfile");
+    const savedToken = localStorage.getItem("token");
+
     if (savedUser) {
       try {
         const user = JSON.parse(savedUser);
-        setUser(user);
-        if (savedProfile) {
-          const profile = JSON.parse(savedProfile);
-          setUserProfile(profile);
-          setStage(profile.currentStage);
-          setLevel(profile.currentLevel);
+
+        // Check if user data is incomplete (missing name or email)
+        if (savedToken && (!user.name || !user.email)) {
+          // Fetch fresh user data from backend
+          fetch(`${API_URL}/auth/profile`, {
+            headers: {
+              Authorization: `Bearer ${savedToken}`,
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.id) {
+                const completeUser = {
+                  id: data.id,
+                  name: data.name,
+                  email: data.email,
+                  token: savedToken,
+                  tests: data.tests || [],
+                };
+                const profile = {
+                  currentStage: data.currentStage || "easy",
+                  currentLevel: data.currentLevel || 1,
+                  maxStageReached: data.maxStageReached || "easy",
+                };
+
+                setUser(completeUser);
+                setHistory(data.tests || []);
+                setUserProfile(profile);
+                setStage(profile.currentStage);
+                setLevel(profile.currentLevel);
+
+                // Update localStorage with complete data
+                localStorage.setItem("user", JSON.stringify(completeUser));
+                localStorage.setItem("userProfile", JSON.stringify(profile));
+              }
+            })
+            .catch((err) => {
+              console.error("Failed to fetch user profile:", err);
+              // Use what we have
+              setUser(user);
+              setHistory(user.tests || []);
+            });
+        } else {
+          // User data is complete, use it
+          setUser(user);
+          setHistory(user.tests || []);
+          if (savedProfile) {
+            const profile = JSON.parse(savedProfile);
+            setUserProfile(profile);
+            setStage(profile.currentStage);
+            setLevel(profile.currentLevel);
+          }
         }
       } catch (e) {
         console.error("Failed to load user");
@@ -298,6 +359,17 @@ const TypingSpeedTester = () => {
     }
   };
 
+  // Handle manual submit for incomplete/incorrect typing
+  const handleManualSubmit = () => {
+    if (!hasStarted || userInput.length === 0) {
+      return; // Don't submit if no input
+    }
+
+    setIsActive(false);
+    setTestComplete(true);
+    calculateStats(userInput, timeElapsed);
+  };
+
   // Generate recommendations
   const generateRecommendation = (testHistory) => {
     if (testHistory.length < 2) {
@@ -383,33 +455,45 @@ const TypingSpeedTester = () => {
           </div>
         </div>
       )}
-      <MainComponent
-        user={user}
-        userProfile={userProfile}
-        handleLogout={handleLogout}
-        stage={stage}
-        setStage={setStage}
-        level={level}
-        setLevel={setLevel}
-        isActive={isActive}
-        targetText={targetText}
-        userInput={userInput}
-        handleInputChange={handleInputChange}
-        timeElapsed={timeElapsed}
-        hasStarted={hasStarted}
-        testComplete={testComplete}
-        loading={loading}
-        renderText={renderText}
-        inputRef={inputRef}
-        stats={stats}
-        history={history}
-        showStats={showStats}
-        setShowStats={setShowStats}
-        errorMap={errorMap}
-        recommendation={recommendation}
-        loadNewPhrase={loadNewPhrase}
-        onLoginRequired={() => setShowLoginModal(true)}
-      />
+      {showProfile ? (
+        <Profile
+          user={user}
+          userProfile={userProfile}
+          history={history}
+          onBack={() => setShowProfile(false)}
+          onUpdateUser={handleUpdateUser}
+        />
+      ) : (
+        <MainComponent
+          user={user}
+          userProfile={userProfile}
+          handleLogout={handleLogout}
+          stage={stage}
+          setStage={setStage}
+          level={level}
+          setLevel={setLevel}
+          isActive={isActive}
+          targetText={targetText}
+          userInput={userInput}
+          handleInputChange={handleInputChange}
+          timeElapsed={timeElapsed}
+          hasStarted={hasStarted}
+          testComplete={testComplete}
+          loading={loading}
+          renderText={renderText}
+          inputRef={inputRef}
+          stats={stats}
+          history={history}
+          showStats={showStats}
+          setShowStats={setShowStats}
+          errorMap={errorMap}
+          recommendation={recommendation}
+          loadNewPhrase={loadNewPhrase}
+          onLoginRequired={() => setShowLoginModal(true)}
+          onViewProfile={() => setShowProfile(true)}
+          handleManualSubmit={handleManualSubmit}
+        />
+      )}
     </>
   );
 };
