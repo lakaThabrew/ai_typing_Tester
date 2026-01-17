@@ -31,6 +31,8 @@ const MainComponent = ({
   loading,
   inputRef,
   onLoginRequired,
+  onViewProfile,
+  handleManualSubmit,
 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -40,6 +42,7 @@ const MainComponent = ({
           onToggleStats={() => setShowStats(!showStats)}
           onLogout={handleLogout}
           onLoginRequired={onLoginRequired}
+          onViewProfile={onViewProfile}
         />
 
         {/* Stats Panel */}
@@ -72,6 +75,8 @@ const MainComponent = ({
             handleInputChange={handleInputChange}
             testComplete={testComplete}
             inputRef={inputRef}
+            hasStarted={hasStarted}
+            handleManualSubmit={handleManualSubmit}
           />
 
           {/* Results */}
@@ -84,12 +89,22 @@ const MainComponent = ({
           />
 
           {!testComplete && !loading && (
-            <button
-              onClick={loadNewPhrase}
-              className="mt-4 w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
-            >
-              New Phrase
-            </button>
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={loadNewPhrase}
+                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+              >
+                New Phrase
+              </button>
+              {hasStarted && userInput.length > 0 && (
+                <button
+                  onClick={handleManualSubmit}
+                  className="flex-1 bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+                >
+                  Submit Test
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
