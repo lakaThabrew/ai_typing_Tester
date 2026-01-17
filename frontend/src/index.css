@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+* {
+  border-color: hsl(214.3 31.8% 91.4%);
+}
+
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}

@@ -1,0 +1,29 @@
+{
+    "name": "ai-typing-tester",
+    "version": "1.0.0",
+    "description": "Full-stack AI typing tester with five-stage difficulty system",
+    "type": "module",
+    "scripts": {
+        "dev": "npm run dev --workspace=frontend",
+        "dev:backend": "npm run dev --workspace=backend",
+        "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev\"",
+        "build": "npm run build --workspace=frontend",
+        "start:backend": "node backend/server.js"
+    },
+    "keywords": [
+        "typing",
+        "tester",
+        "ai",
+        "speed"
+    ],
+    "author": "",
+    "license": "ISC",
+    "workspaces": [
+        "frontend",
+        "backend"
+    ],
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.18",
+        "concurrently": "^8.2.2"
+    }
+}
