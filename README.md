@@ -107,7 +107,7 @@ ai-typing-tester/
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/ai-typing-tester.git
+   git clone https://github.com/lakaThabrew/ai-typing-tester.git
    cd ai-typing-tester
    ```
 
@@ -385,7 +385,7 @@ This project is licensed under the ISC License.
 
 ## 👨‍💻 Author
 
-Created with ❤️ by [Your Name]
+Created with ❤️ by Lakmana Thabrew.
 
 ## 🙏 Acknowledgments
 
@@ -397,7 +397,7 @@ Created with ❤️ by [Your Name]
 
 ## 📧 Contact
 
-For questions or feedback, please open an issue or contact [your-email@example.com]
+For questions or feedback, please open an issue or contact [lakmanathabrew123@gmail.com]
 
 ---
 
