@@ -43,7 +43,8 @@ router.post('/generate-pharse', async (req, res) => {
     console.log(`🤖 Calling Gemini AI - Stage: ${normalizedStage}, Level: ${levelNumber}, Max Tokens: ${maxTokens}`);
 
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+
       {
         contents: [
           {
@@ -70,9 +71,11 @@ router.post('/generate-pharse', async (req, res) => {
     const phrase = response.data.candidates[0].content.parts[0].text
       .trim()
       .replace(/^['"]|['"]$/g, '');
-    console.log(`✅ Gemini AI Response: "${phrase}"`); res.json({ phrase, pharse: phrase });
+    console.log(`✅ Gemini AI Response: "${phrase}"`);
+    res.json({ phrase, pharse: phrase });
   } catch (error) {
     console.error('❌ Gemini AI API Error:', error.message);
+    console.error(error.response?.data || error.message);
     console.log('⚠️  Using fallback phrase...');
     const fallbacks = {
       easy: 'The quick brown fox jumps over the lazy dog.',
