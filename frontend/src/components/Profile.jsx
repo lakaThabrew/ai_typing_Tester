@@ -10,8 +10,11 @@ import {
   Calendar,
   Target,
   Zap,
-  X,
 } from "lucide-react";
+import EmailChangeModal from "./EmailChangeModel";
+import NameChangeModal from "./NameChangeModal";
+import PasswordChangeModal from "./PasswordChangeModal";
+import RecentTestPanel from "./RecentTestPanel";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -52,17 +55,17 @@ const Profile = ({ user, userProfile, history, onBack, onUpdateUser }) => {
     }
 
     const avgWpm = Math.round(
-      history.reduce((sum, t) => sum + t.wpm, 0) / history.length
+      history.reduce((sum, t) => sum + t.wpm, 0) / history.length,
     );
     const avgAccuracy = Math.round(
-      history.reduce((sum, t) => sum + t.accuracy, 0) / history.length
+      history.reduce((sum, t) => sum + t.accuracy, 0) / history.length,
     );
     const bestWpm = Math.max(...history.map((t) => t.wpm));
     const totalTime = Math.round(
-      history.reduce((sum, t) => sum + (t.time || 0), 0) / 60
+      history.reduce((sum, t) => sum + (t.time || 0), 0) / 60,
     ); // in minutes
     const avgCpm = Math.round(
-      history.reduce((sum, t) => sum + t.cpm, 0) / history.length
+      history.reduce((sum, t) => sum + t.cpm, 0) / history.length,
     );
 
     return {
@@ -382,42 +385,7 @@ const Profile = ({ user, userProfile, history, onBack, onUpdateUser }) => {
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
                   Recent Tests
                 </h3>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {history
-                    .slice()
-                    .reverse()
-                    .map((test, idx) => (
-                      <div
-                        key={idx}
-                        className="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                            <span className="text-indigo-700 font-bold">
-                              {test.wpm}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">
-                              {test.wpm} WPM • {test.accuracy}% Accuracy
-                            </p>
-                            <p className="text-sm text-gray-600 capitalize">
-                              {test.stage} - Level {test.level} • {test.errors}{" "}
-                              errors
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm text-gray-500">
-                            {new Date(test.date).toLocaleDateString()}
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            {new Date(test.date).toLocaleTimeString()}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
+                <RecentTestPanel history={history} />
               </div>
             )}
           </>
@@ -425,196 +393,43 @@ const Profile = ({ user, userProfile, history, onBack, onUpdateUser }) => {
       </div>
 
       {/* Password Change Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-gray-900">
-                Change Password
-              </h3>
-              <button
-                onClick={() => setShowPasswordModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <form onSubmit={handlePasswordChange} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              {passwordError && (
-                <p className="text-sm text-red-600">{passwordError}</p>
-              )}
-              {passwordSuccess && (
-                <p className="text-sm text-green-600">{passwordSuccess}</p>
-              )}
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
-                >
-                  Update Password
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordModal(false)}
-                  className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <PasswordChangeModal
+        showPasswordModal={showPasswordModal}
+        setShowPasswordModal={setShowPasswordModal}
+        currentPassword={currentPassword}
+        setCurrentPassword={setCurrentPassword}
+        newPassword={newPassword}
+        setNewPassword={setNewPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
+        handlePasswordChange={handlePasswordChange}
+        passwordError={passwordError}
+        passwordSuccess={passwordSuccess}
+      />
 
       {/* Email Change Modal */}
-      {showEmailModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Change Email</h3>
-              <button
-                onClick={() => setShowEmailModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <form onSubmit={handleEmailChange} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  New Email
-                </label>
-                <input
-                  type="email"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  value={emailPassword}
-                  onChange={(e) => setEmailPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              {emailError && (
-                <p className="text-sm text-red-600">{emailError}</p>
-              )}
-              {emailSuccess && (
-                <p className="text-sm text-green-600">{emailSuccess}</p>
-              )}
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
-                >
-                  Update Email
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowEmailModal(false)}
-                  className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <EmailChangeModal
+        showEmailModal={showEmailModal}
+        setShowEmailModal={setShowEmailModal}
+        newEmail={newEmail}
+        setNewEmail={setNewEmail}
+        emailPassword={emailPassword}
+        setEmailPassword={setEmailPassword}
+        handleEmailChange={handleEmailChange}
+        emailError={emailError}
+        emailSuccess={emailSuccess}
+      />
 
       {/* Name Change Modal */}
-      {showNameModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Change Name</h3>
-              <button
-                onClick={() => setShowNameModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <form onSubmit={handleNameChange} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  New Name
-                </label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              {nameError && <p className="text-sm text-red-600">{nameError}</p>}
-              {nameSuccess && (
-                <p className="text-sm text-green-600">{nameSuccess}</p>
-              )}
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
-                >
-                  Update Name
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowNameModal(false)}
-                  className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <NameChangeModal
+        showNameModal={showNameModal}
+        setShowNameModal={setShowNameModal}
+        newName={newName}
+        setNewName={setNewName}
+        handleNameChange={handleNameChange}
+        nameError={nameError}
+        nameSuccess={nameSuccess}
+      />
     </div>
   );
 };
