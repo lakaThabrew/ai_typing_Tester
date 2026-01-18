@@ -7,6 +7,8 @@ const TextDisplay = ({
   handleInputChange,
   testComplete,
   inputRef,
+  hasStarted,
+  handleManualSubmit,
 }) => {
   return (
     <>

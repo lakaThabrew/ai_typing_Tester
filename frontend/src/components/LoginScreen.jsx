@@ -26,10 +26,10 @@ const LoginScreen = ({
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
             <Zap className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            AI Typing Tester
-          </h1>
-          <p className="text-gray-600">Master your typing skills with AI</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">TypeIQ</h1>
+          <p className="text-gray-600">
+            Master your typing skills with AI-powered practice
+          </p>
         </div>
 
         <div className="flex gap-2 mb-6">

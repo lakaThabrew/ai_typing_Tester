@@ -1,6 +1,6 @@
-# 🚀 AI Typing Tester
+# 🚀 TypeIQ - AI-Powered Typing Tester
 
-A full-stack typing speed tester powered by **Gemini AI** with a progressive difficulty system, user profiles, and comprehensive statistics tracking.
+**TypeIQ** is a full-stack typing speed tester powered by **Gemini AI** with a progressive difficulty system, user profiles, and comprehensive statistics tracking. Master your typing skills with intelligent, adaptive practice sessions.
 
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
@@ -19,6 +19,8 @@ A full-stack typing speed tester powered by **Gemini AI** with a progressive dif
 - **Profile System** - Track current stage/level with progressive unlocking
 - **Real-time Feedback** - Live WPM, CPM, accuracy, and error tracking
 - **Smart Recommendations** - AI-powered suggestions based on performance
+- **Manual Test Submission** - Submit incomplete or incorrect typing attempts for practice
+- **Profile Management** - Update password, email, and personal information
 
 ### 📊 Statistics & Progress
 
@@ -177,89 +179,6 @@ npm run build
 npm run start:backend
 ```
 
-## 📖 API Documentation
-
-### Authentication Endpoints
-
-#### Register User
-
-```http
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "securepassword"
-}
-```
-
-#### Login User
-
-```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "john@example.com",
-  "password": "securepassword"
-}
-```
-
-#### Get User Profile
-
-```http
-GET /api/auth/profile
-Authorization: Bearer <token>
-```
-
-### Test Endpoints
-
-#### Submit Test Result
-
-```http
-POST /api/test/submit
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "wpm": 65,
-  "cpm": 325,
-  "accuracy": 95,
-  "errors": 5,
-  "stage": "steady",
-  "level": 3,
-  "time": 60
-}
-```
-
-#### Get User Stats
-
-```http
-GET /api/test/stats
-Authorization: Bearer <token>
-```
-
-#### Get Leaderboard
-
-```http
-GET /api/test/leaderboard
-```
-
-### AI Endpoints
-
-#### Generate Typing Phrase
-
-```http
-POST /api/ai/generate-pharse
-Content-Type: application/json
-
-{
-  "stage": "easy",
-  "level": 1
-}
-```
-
 ## 🎮 How to Use
 
 ### 1. **Registration/Login**
@@ -385,9 +304,11 @@ This project is licensed under the ISC License.
 
 ## 👨‍💻 Author
 
-Created with ❤️ by Lakmana Thabrew.
+**TypeIQ** - Created with ❤️ by Lakmana Thabrew.
 
 ## 🙏 Acknowledgments
+
+**TypeIQ** is built with the following amazing technologies:
 
 - **Google Gemini AI** - For intelligent phrase generation
 - **Tailwind CSS** - For beautiful styling

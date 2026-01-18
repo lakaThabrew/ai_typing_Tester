@@ -1,7 +1,7 @@
 {
-    "name": "ai-typing-tester",
+    "name": "typeiq",
     "version": "1.0.0",
-    "description": "Full-stack AI typing tester with five-stage difficulty system",
+    "description": "TypeIQ - AI-powered typing tester with progressive difficulty system",
     "type": "module",
     "scripts": {
         "dev": "npm run dev --workspace=frontend",

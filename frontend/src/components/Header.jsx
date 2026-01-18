@@ -1,7 +1,13 @@
 import React from "react";
-import { Activity, LogOut, User } from "lucide-react";
+import { Activity, LogOut, User, UserCircle } from "lucide-react";
 
-const Header = ({ user, onToggleStats, onLogout, onLoginRequired }) => {
+const Header = ({
+  user,
+  onToggleStats,
+  onLogout,
+  onLoginRequired,
+  onViewProfile,
+}) => {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
@@ -13,13 +19,13 @@ const Header = ({ user, onToggleStats, onLogout, onLoginRequired }) => {
             {user ? (
               <>
                 <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
-                <p className="text-sm text-gray-600">{user.email}</p>
+                <p className="text-sm text-gray-600">{user.email} • TypeIQ</p>
               </>
             ) : (
               <>
                 <h2 className="text-xl font-bold text-gray-900">Guest User</h2>
                 <p className="text-sm text-gray-600">
-                  Login to save your progress
+                  Login to save your progress • TypeIQ
                 </p>
               </>
             )}
@@ -29,11 +35,11 @@ const Header = ({ user, onToggleStats, onLogout, onLoginRequired }) => {
           {user ? (
             <>
               <button
-                onClick={onToggleStats}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition"
+                onClick={onViewProfile}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition"
               >
-                <Activity className="w-4 h-4" />
-                Stats
+                <UserCircle className="w-4 h-4" />
+                Profile
               </button>
               <button
                 onClick={onLogout}
