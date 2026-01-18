@@ -19,13 +19,13 @@ const Header = ({
             {user ? (
               <>
                 <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
-                <p className="text-sm text-gray-600">{user.email}</p>
+                <p className="text-sm text-gray-600">{user.email} • TypeIQ</p>
               </>
             ) : (
               <>
                 <h2 className="text-xl font-bold text-gray-900">Guest User</h2>
                 <p className="text-sm text-gray-600">
-                  Login to save your progress
+                  Login to save your progress • TypeIQ
                 </p>
               </>
             )}

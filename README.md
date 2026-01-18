@@ -1,6 +1,6 @@
-# 🚀 AI Typing Tester
+# 🚀 TypeIQ - AI-Powered Typing Tester
 
-A full-stack typing speed tester powered by **Gemini AI** with a progressive difficulty system, user profiles, and comprehensive statistics tracking.
+**TypeIQ** is a full-stack typing speed tester powered by **Gemini AI** with a progressive difficulty system, user profiles, and comprehensive statistics tracking. Master your typing skills with intelligent, adaptive practice sessions.
 
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
@@ -304,9 +304,11 @@ This project is licensed under the ISC License.
 
 ## 👨‍💻 Author
 
-Created with ❤️ by Lakmana Thabrew.
+**TypeIQ** - Created with ❤️ by Lakmana Thabrew.
 
 ## 🙏 Acknowledgments
+
+**TypeIQ** is built with the following amazing technologies:
 
 - **Google Gemini AI** - For intelligent phrase generation
 - **Tailwind CSS** - For beautiful styling

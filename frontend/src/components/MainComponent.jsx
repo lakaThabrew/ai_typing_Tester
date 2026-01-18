@@ -48,7 +48,7 @@ const MainComponent = ({
         {/* Stats Panel */}
         <StatsPanel showStats={showStats} history={history} />
 
-        {/* Typing Test Area */}
+        {/* TypeIQ Typing Test Area */}
         <div className="bg-white rounded-2xl shadow-lg p-8">
           {/* Stage and Level Selector */}
           <StageLevelSelector

@@ -229,9 +229,12 @@ const Profile = ({ user, userProfile, history, onBack, onUpdateUser }) => {
             onClick={onBack}
             className="mb-4 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2"
           >
-            ← Back to Typing Test
+            ← Back to TypeIQ
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
+            <span className="text-sm text-gray-500">• TypeIQ</span>
+          </div>
         </div>
         {/* Show loading or error if user data is missing */}
         {!user ? (

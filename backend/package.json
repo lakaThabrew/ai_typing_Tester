@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "typeiq-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "TypeIQ Backend - AI-powered typing tester API",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
