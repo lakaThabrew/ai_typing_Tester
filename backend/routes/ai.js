@@ -49,13 +49,23 @@ const levelHints = [
   'Challenging (26-32 words), rich vocabulary.',
 ];
 
-async function generatePhrase(prompt, maxTokens) {
+// Get all available API keys (primary + backups)
+function getApiKeys() {
+  const keys = [process.env.GEMINI_API_KEY];
+  if (process.env.BACKUP_GEMINI_API_KEYS) {
+    const backupKeys = process.env.BACKUP_GEMINI_API_KEYS.split(',').map(k => k.trim());
+    keys.push(...backupKeys);
+  }
+  return keys.filter(Boolean);
+}
+
+async function generatePhrase(prompt, maxTokens, apiKey = process.env.GEMINI_API_KEY) {
   const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
     {
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
-        temperature: 0.55, // lower for more complete sentences
+        temperature: 0.55,
         topP: 0.85,
         maxOutputTokens: maxTokens,
       },
@@ -103,15 +113,45 @@ router.post('/generate-pharse', async (req, res) => {
 
     console.log(`🤖 Gemini 2.5 | Stage: ${normalizedStage} | Level: ${levelNumber}`);
 
-    // Try generating up to 2 times if output is too short
-    let phrase = await generatePhrase(prompt, maxTokens);
-    console.log(`🔄 Generated Phrase: "${phrase}"`);
-    if (!phrase) {
-      console.log('⚠️ First attempt too short, retrying...');
-      phrase = await generatePhrase(prompt, maxTokens);
+    const apiKeys = getApiKeys();
+    let phrase = '';
+    let lastError = null;
+
+    // Try each API key until one works
+    for (let i = 0; i < apiKeys.length; i++) {
+      const apiKey = apiKeys[i];
+      const keyLabel = i === 0 ? 'Primary' : `Backup ${i}`;
+
+      try {
+        console.log(`🔑 Trying ${keyLabel} API key...`);
+        phrase = await generatePhrase(prompt, maxTokens, apiKey);
+
+        if (!phrase) {
+          console.log(`⚠️ ${keyLabel} key returned empty, retrying...`);
+          phrase = await generatePhrase(prompt, maxTokens, apiKey);
+        }
+
+        if (phrase) {
+          console.log(`✅ Success with ${keyLabel} key: "${phrase}"`);
+          break;
+        }
+      } catch (err) {
+        lastError = err;
+        const status = err.response?.status;
+
+        if (status === 429) {
+          console.log(`⚠️ ${keyLabel} key rate limited (429), trying next key...`);
+          continue;
+        } else {
+          console.error(`❌ ${keyLabel} key error:`, err.message);
+          // For non-429 errors, still try backup keys
+          continue;
+        }
+      }
     }
 
     if (!phrase) {
+      console.log('⚠️ All API keys failed, using fallback phrase...');
       const fallbacks = {
         easy: 'She types slowly while learning new keyboard skills.',
         steady: 'Daily typing practice improves both speed and accuracy.',
@@ -123,12 +163,12 @@ router.post('/generate-pharse', async (req, res) => {
       phrase = fallbacks[normalizedStage] || fallbacks.easy;
     }
 
-    console.log(`✅ Gemini AI Response: "${phrase}"`);
+    console.log(`✅ Final Response: "${phrase}"`);
     res.json({ phrase, pharse: phrase });
   } catch (error) {
-    console.error('❌ Gemini AI API Error:', error.message);
+    console.error('❌ Unexpected Error:', error.message);
     console.error(error.response?.data || error.message);
-    
+
     console.log('⚠️  Using fallback phrase...');
 
     const fallbacks = {
