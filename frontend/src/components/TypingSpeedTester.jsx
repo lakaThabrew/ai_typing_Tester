@@ -55,6 +55,8 @@ const TypingSpeedTester = () => {
 
   const inputRef = useRef(null);
   const timerRef = useRef(null);
+  const isInitialMount = useRef(true);
+  const previousStageLevel = useRef({ stage: "easy", level: 1 });
 
   // Auth Functions
   const handleAuth = async () => {
@@ -105,6 +107,12 @@ const TypingSpeedTester = () => {
       setPassword("");
       setName("");
       setShowLoginModal(false);
+
+      // Update the previous stage/level ref to prevent duplicate calls
+      previousStageLevel.current = {
+        stage: profile.currentStage,
+        level: profile.currentLevel,
+      };
       loadNewPhrase();
     } catch (error) {
       setAuthError("Connection error. Make sure backend is running.");
@@ -176,6 +184,12 @@ const TypingSpeedTester = () => {
                 setStage(profile.currentStage);
                 setLevel(profile.currentLevel);
 
+                // Update the previous stage/level ref to prevent duplicate calls on initial load
+                previousStageLevel.current = {
+                  stage: profile.currentStage,
+                  level: profile.currentLevel,
+                };
+
                 // Update localStorage with complete data
                 localStorage.setItem("user", JSON.stringify(completeUser));
                 localStorage.setItem("userProfile", JSON.stringify(profile));
@@ -196,6 +210,12 @@ const TypingSpeedTester = () => {
             setUserProfile(profile);
             setStage(profile.currentStage);
             setLevel(profile.currentLevel);
+
+            // Update the previous stage/level ref to prevent duplicate calls on initial load
+            previousStageLevel.current = {
+              stage: profile.currentStage,
+              level: profile.currentLevel,
+            };
           }
         }
       } catch (e) {
@@ -228,7 +248,7 @@ const TypingSpeedTester = () => {
 
       const data = await response.json();
       setTargetText(
-        data.phrase || "The quick brown fox jumps over the lazy dog."
+        data.phrase || "The quick brown fox jumps over the lazy dog.",
       );
       setUserInput("");
       setIsActive(false);
@@ -247,7 +267,21 @@ const TypingSpeedTester = () => {
 
   // Load phrase on mount and when stage/level changes
   useEffect(() => {
-    loadNewPhrase();
+    // Skip the initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      loadNewPhrase();
+      return;
+    }
+
+    // Only load if stage or level actually changed
+    if (
+      previousStageLevel.current.stage !== stage ||
+      previousStageLevel.current.level !== level
+    ) {
+      previousStageLevel.current = { stage, level };
+      loadNewPhrase();
+    }
   }, [stage, level]);
 
   // Handle input change
@@ -344,7 +378,7 @@ const TypingSpeedTester = () => {
               setRecommendation(
                 `🎉 Congratulations! You've unlocked ${data.currentStage.toUpperCase()} Level ${
                   data.currentLevel
-                }!`
+                }!`,
               );
             } else {
               generateRecommendation(updatedHistory);
@@ -374,7 +408,7 @@ const TypingSpeedTester = () => {
   const generateRecommendation = (testHistory) => {
     if (testHistory.length < 2) {
       setRecommendation(
-        "Keep practicing! Complete more tests to get personalized recommendations."
+        "Keep practicing! Complete more tests to get personalized recommendations.",
       );
       return;
     }
